@@ -1,0 +1,66 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+test/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Sphinx documentation
+docs/_build/
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+env/
+venv/
+v_wechat*/
+ENV/
+env.bak/
+venv.bak/
+Pipfile
+
+
+# Pyre type checker
+.pyre/
+
+.idea
+.DS_Store
+*/.DS_Store
+
+.vscode
+.history
+
+
+# Vim
+*.swp
+*.swo
+
+# tags
+.tags
+.tags_sorted_by_file
+.test
+
+# prometheus
+prometheus_cache/
