@@ -1,0 +1,98 @@
+# -*- coding:utf-8 -*-
+
+import tornado.escape
+import tornado.web
+from wechat_sdk import WechatBasic
+import xml.etree.ElementTree as ET
+import json
+import time
+
+import config as CONFIG
+
+wechat = WechatBasic(conf=CONFIG.conf)
+
+with open("config/classify.json", 'r') as f:
+    classify = json.load(f)
+
+class WxSignatureHandler(tornado.web.RequestHandler):
+    def get(self):
+        signature = self.get_argument('signature', 'defatult')#微信加密签名
+        timestamp = self.get_argument('timestamp', 'default')#时间戳
+        nonce = self.get_argument('nonce', 'default')#随机数
+        echostr = self.get_argument('echostr', 'default')#随机字符串
+
+        if signature == 'defatult' or timestamp == 'defatult' or nonce == 'defatult' or echostr == 'defatult':
+            self.write("Its fail!")
+        elif wechat.check_signature(signature, timestamp, nonce):
+            self.write(echostr)
+        else:
+            self.write("Its fail!")
+
+    def post(self):
+        body = self.request.body.decode("utf-8")
+        print(body)
+        try:
+            data = ET.fromstring(body)
+        except Exception as e:
+            print(e)
+        
+        
+        content = self.masage_handle(data)
+        print(content)
+
+        self.write(content)
+    
+    def set_to_text(self, sets):
+        text = ''
+        for v in value:
+            text += '【{}】\n'.format(v)
+        return text
+
+    def masage_handle(self, data):
+        # 解析xml数据并加载到字典中
+        MyName = data.find('ToUserName').text
+        UserName = data.find('FromUserName').text
+        CreateTime = data.find('CreateTime').text
+        MsgType = data.find('MsgType').text
+        MsgId = data.find('MsgId').text
+        
+        # 分类处理
+        # text时，提取内容即可
+        if MsgType == 'text':
+            Content = data.find('Content').text
+
+        # voice,使用正则过滤文本
+        elif MsgType == 'voice':
+            Content = data.find('Recognition').text
+        
+        # 非测试号则统一处理
+        if UserName != "oALMC6XKieHpEqdBStP2EhzY5ALs":
+            answer = CONFIG.textTpl.format(UserName, MyName, int(time.time()), 'text', '欢迎关注，请多支持')
+            return answer
+
+        # 将用户输入内容在字典中进行搜索，以后将字典改为数据库
+        value = classify.get(Content, '')
+        # 当输入内容非规定项时，输出初始化内容
+        if not value:
+            text = classify.get("初始化1", "").format('iris')
+            value = classify.get("初始化2", "")
+            text += self.set_to_text(value)      
+        if type(value) == set:
+            text = self.set_to_text(value)
+            text = value
+
+        answer = CONFIG.textTpl.format(UserName, MyName, int(time.time()), 'text', text)
+        return answer
+
+        # 暂不处理其他类型的回复
+        #if MsgType == 'event':
+            #Content = data.find('Event').text
+            #if Content == 'subscribe':
+            #answer = CONFIG.textTpl.format(UserName, MyName, int(time.time()), 'text', '欢迎关注，，请多支持2')
+        #else:
+            #answer = CONFIG.textTpl.format(UserName, MyName, int(time.time()), 'text', '欢迎关注，，请多支持3')
+        answer = CONFIG.textTpl.format(UserName, MyName, int(time.time()), 'text', '欢迎关注，，请多支持2')
+
+        return answer
+
+

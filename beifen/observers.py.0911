@@ -1,0 +1,245 @@
+# -*- coding:utf-8 -*-
+
+import config as CONFIG
+from datetime import date, timedelta
+
+# 数据库类:增删改查
+class DataBase(object):
+    def find_data(self, tablename):
+        pass
+    def update_data(self, tablename):
+        pass
+    def del_data(self, tablename):
+        pass
+    def add_data(self, tablename):
+        pass
+
+# 处理基类
+class Menus(object):  
+    def __init__(self) -> None:
+        super().__init__()
+    def handle(self):
+        raise Exception('handle not implemented')
+
+# 处理不明回复
+class Other(Menus):
+    def handle(self, userid, users):
+        menus = CONFIG.mainmenu
+        result = ''
+        if userid not in users:
+            result += CONFIG.text1
+
+        result += CONFIG.menu_text
+        users[userid] = 0
+        return result
+
+# 处理签到
+class Clock(Menus):
+    def handle(self, data, users):
+        today = date.today()
+        userid = data['UserName']
+        cur = CONFIG.clock_table.find_one({'openid': userid})
+        # users[userid] = -1
+        
+        # 判断是否是新用户,新用户则插入
+        if not cur:
+            cur = {
+                'openid': userid, 
+                'firstday': str(today), 
+                'endday': str(today),
+                'fate': 1,
+                'persist':1
+                }
+
+            CONFIG.clock_table.insert_one(cur)
+            query = CONFIG.clock_rule[1]
+            CONFIG.user_table.update_one({'openid': userid}, query)
+            # print('新用户{}签到成功。'.format(userid))
+            result = CONFIG.clock_text[1]
+            result += "{}{}".format(CONFIG.reward_text, CONFIG.clock_text_rule[1])
+            return result
+           
+        endday = cur.get('endday', '')
+        # 判断是否已经签到
+        if str(today) == endday:
+            return CONFIG.clock_text[0]
+        
+        # 判断是否连续签到
+        if str(today - timedelta(days=1)) == endday:
+            cur['fate'] = cur.get('fate', 0)+1
+            cur['persist'] = cur.get('persist', 0)+1
+            cur['endday'] = str(today)
+        else:
+            cur['fate'] = 1
+            cur['firstday'] = str(today)
+            cur['endday'] = str(today)
+            cur['persist'] = cur.get('persist', 0)+1
+
+        fate = cur['fate'] if cur['fate'] < 7 else 7
+        query = CONFIG.clock_rule.get(fate)
+        update_result = CONFIG.clock_table.update({'openid': userid}, cur)
+        # 签到成功则用户表新增数据
+        if update_result.get('nModified', 0) == 1:
+            CONFIG.user_table.update_one({'openid': userid}, query)
+            result = CONFIG.clock_text[2]
+            result += "{}{}".format(CONFIG.reward_text, CONFIG.clock_text_rule.get(fate))
+            return result
+        else:
+            return CONFIG.clock_text[-1]
+
+# 处理任务查询
+class Classify(Menus):
+    def handle(self, data, users):
+        # userid = data['UserName']
+        userid = 'oALMC6XKieHpEqdBStP2EhzY5ALs'
+        result = ''
+        
+        # 查询任务
+        if users.get(data['UserName'], -1) == 0:
+            query = {'_id':0, 'id':1, 'classname':1}
+            cursors = CONFIG.task_table.find({'openid': userid}, query).sort('id')
+            if not cursors:
+                return CONFIG.find_text
+
+            result += CONFIG.task_text.format(CONFIG.mainmenu[1])
+            distinct = set()
+            for cur in cursors:
+                if cur['id'] not in distinct:
+                    distinct.add(cur['id'])
+                    result += '{}：【{}】\n'.format(cur['id'], cur['classname'])
+            users[data['UserName']] = 1
+
+        # 查询子任务
+        elif users.get(data['UserName'], -1) == 1:
+            if data['Content'] in [str(i) for i in range(10)]:
+                query = {'openid': userid,'id': int(data['Content'])}
+            else:
+                query = {'openid': userid,'classname': data['Content']}
+
+            myfilter = {'_id': 0, 'id':1, 'classname':1, 'sub_id':1, 'subclassname':1}
+            cursors = CONFIG.task_table.find(query, myfilter)
+            if not cursors:
+                return CONFIG.find_text
+
+            result += CONFIG.task_text.format(cursors[0].get('classname'))
+            for cur in cursors:
+                result += '{}：【{}】\n'.format(cur.get('sub_id'), cur.get('subclassname'))
+            users[data['UserName']] = cur.get('id')+10
+
+        # 查询子任务奖励
+        elif users.get(data['UserName'], -1) >10:
+            id_ = users.get(data['UserName'], -1)-10
+            if data['Content'] in [str(i) for i in range(10)]:
+                query = {'openid': userid, 'id': id_, 'sub_id':int(data['Content'])}
+            else:
+                query = {'openid': userid, 'id': id_, 'subclassname':data}
+            myfilter = {'_id':0, 'openid':0, 'id':0, 'classname':0, 'sub_id': 0}
+            cursors = CONFIG.task_table.find_one(query, myfilter)
+            if not cursors:
+                return CONFIG.find_text
+
+            result += CONFIG.task_reward_text.format(cursors['subclassname'])
+            for cur in cursors:
+                if cursors[cur] == 0 or cur not in CONFIG.attribute:
+                    continue
+                result += '{}+{}\n'.format(CONFIG.attribute[cur], cursors[cur])
+            result += CONFIG.horline
+        
+        result += '{}：【{}】'.format(0, '返回')
+        return result
+
+# 处理积分查询
+class UserData(Menus):
+    def handle(self, data, users):
+        result = CONFIG.user_text
+        cursors = CONFIG.user_table.find_one({'openid': data['UserName']})
+        if not cursors:
+            return CONFIG.find_text
+        for cur in cursors:
+            # if cursors[cur] == 0 or cur not in CONFIG.attribute:
+            if cur not in CONFIG.attribute:
+                continue
+            result += '{}：{}\n'.format(CONFIG.attribute[cur], cursors[cur])
+
+        return result
+
+class Rule(Menus):
+    def handle(self):
+        result = CONFIG.rule
+        return result
+
+# 处理关注事件
+class Follow(Menus):
+    def handle(self, data, users):
+        pass
+
+class Shop(Menus):
+    def handle(self):
+        # find_and_modify 当用户金币数达到这个值时才可以购买
+        return super().handle()
+
+# 分类处理
+class Informer(object):
+    def __init__(self):
+        self.menus = {}
+        self.user = {}
+        self.other = Other()
+        self.clock = Clock()
+        self.classify = Classify()
+        self.userdata = UserData()
+
+    def register(self, key, class_):
+        self.menus[key] = class_
+
+    # 分类处理
+    def categorize(self, data):
+        # MsgType = data.get('MsgType', '')
+        Content = data.get('Content', '')
+        userid = data.get('UserName', '')
+        print('用户等级为：', self.user.get(data['UserName'], -1))
+
+        id_ = self.user.get(userid, -1)
+
+        # 当用户退出时
+        if Content == '0' or Content == '返回':
+            # 正处于任务菜单页面中
+            if id_ == 1:
+                self.user[userid] -= 1
+                result = self.other.handle(userid, self.user)
+                return result
+            # 正处于子任务菜单页面中
+            elif id_ >10 and id_ < 20:
+                Content = '2'
+                self.user[userid] = 0
+
+        # 当用户处于主菜单页面时,将序号替换为关键词
+        if id_ == 0:
+            if Content in [str(i) for i in range(10)]:
+                Content = CONFIG.mainmenu[int(Content)-1]
+        # 当用户处于任务菜单页面时，直接调用任务管理器
+        elif id_ == 1:
+            result = self.classify.handle(data, self.user)
+            return result
+        elif id_ > 10 and id_ < 20:
+            result = self.classify.handle(data, self.user)
+            return result
+        # 当用户处于商城菜单页面时，直接调用商城管理器
+        elif id_ == 2:
+            return '该功能尚未开发，请稍等'
+        elif id_ > 20 and id_ < 30:
+            return '该功能尚未开发，请稍等'
+
+        # 根据关键词调用管理器
+        if Content in self.menus:
+            Handle = self.menus[Content]
+            result = Handle.handle(data, self.user)
+            return result
+
+        # default处理器
+        result = self.other.handle(userid, self.user)
+        return result
+
+informer = Informer()
+informer.register(CONFIG.mainmenu[0], informer.clock)
+informer.register(CONFIG.mainmenu[1], informer.classify)
+informer.register(CONFIG.mainmenu[3], informer.userdata)
