@@ -4,7 +4,7 @@ import os
 from wechatpy import WeChatClient
 import json
 
-TOKEN = "o44odc6A3wjetIv8DlVh3cMiu0hF",
+TOKEN = "o44odc6A3wjetIv8DlVh3cMiu0hF"
 APPID = "wx1f0043387c3de18d"
 APP_SECRET = "7aee91fa5b6dd8b033ff24e873cfa426"
 ENCODING_AES_KEY = "CW8WweiAvQcGnYtkjF9sERXybvhTcyPQnPJONuHyMQS"

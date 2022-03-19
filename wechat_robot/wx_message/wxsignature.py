@@ -15,7 +15,8 @@ class WxSignatureHandler:
         """
         
         try:
-            check_signature(CONFIG.Token, signature, timestamp, nonce)
-        except InvalidSignatureException:
-            return JSONResponse('错误的请求')
+            check_signature(CONFIG.TOKEN, signature, timestamp, nonce)
+        except InvalidSignatureException as e:
+            return False, "错误的请求"
 
+        return True, ""

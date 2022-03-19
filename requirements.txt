@@ -1,6 +1,6 @@
-uvicorn=0.17.6
-fastapi=0.75.0
+uvicorn==0.17.6
+fastapi==0.75.0
 cryptography>=0.8.2
-wechatpy=1.8.18
-requests=2.6.0
-pydantic=1.9.0
+wechatpy==1.8.18
+requests==2.6.0
+pydantic==1.9.0
