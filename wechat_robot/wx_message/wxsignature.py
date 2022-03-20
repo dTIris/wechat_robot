@@ -1,9 +1,10 @@
-from fastapi.responses import JSONResponse
+import logging
 from wechatpy.utils import check_signature
 from wechatpy.exceptions import InvalidSignatureException
 
 import wechat_robot.config as CONFIG
 
+logger = logging.getLogger("WxSignatureHandler")
 class WxSignatureHandler:
     async def auth_service(self, signature, timestamp, nonce):
         """ 
@@ -17,6 +18,7 @@ class WxSignatureHandler:
         try:
             check_signature(CONFIG.TOKEN, signature, timestamp, nonce)
         except InvalidSignatureException as e:
+            logger.error(e)
             return False, "错误的请求"
 
         return True, ""
