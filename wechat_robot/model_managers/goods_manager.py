@@ -7,5 +7,3 @@ from wechat_robot.models import GoodsModel
 class GoodsManager(BaseManager):
     """-"""
     model = GoodsModel
-
-    

@@ -26,12 +26,12 @@ class StateHandler:
         start_state = self.start_state
         handle_time = 0
         while handle_time < 4:
-            print(start_state["name"], cargo)
+            print('run', start_state["name"], cargo)
             handler = self.handlers.get(start_state["name"] or "")
             if not handler:
                 return False, ErrorCode.state_error
             try: 
-                handler_ = handler(self.start_state, self.user, cargo)
+                handler_ = handler(start_state, self.user, cargo)
                 new_state, cargo = await handler_.execute()
                 if not new_state:
                     return False, cargo

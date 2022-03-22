@@ -15,6 +15,7 @@ class BaseHandler:
         self.data = data
         self.cache = Cache()
         self.user_tab_key = RedisKeys.user_tab(user)
+        print(f'__init__ self.tab : {tab}')
 
     def parse_data(self, data: str):
         """
@@ -38,7 +39,7 @@ class BaseHandler:
             return False, data
         return True, num 
         
-    async def get_next_tab(self, number):
+    async def get_next_tab(self, number: int):
         """ 
             根据数字返回tab页的上下级
             -1为返回上一级
@@ -54,6 +55,7 @@ class BaseHandler:
                 "sort": number - 1 if number > 0 else number
             }
             tab = await TabManager().get_with_params_first(filter_params)
+        print(f'{self.tab} get_next_tab number {number}')
         return tab.to_dict() if tab else {}
     
     async def get_tab_by_id(self, tab_id):
@@ -62,3 +64,19 @@ class BaseHandler:
             return {}
         tab = await TabManager.get_by_id(tab_id)
         return tab.to_dict() if tab else {}
+
+    async def get_tab_txt_and_sub_tab(self):
+        """ - """
+        sub_name_list = await TabManager.get_sub_list_with_value(self.tab["id"], "alias") or []
+        sub_name_txt = ''
+        for i, j in enumerate(sub_name_list):
+            sub_name_txt += f"  {i+1}:{j}\n"
+        return self.tab["description"], sub_name_txt
+    
+    async def get_tab_txt_and_datas(self, model_manager, offset=0, limit=8):
+        """ - """
+        sub_name_list = await model_manager.get_by_limit_and_value("name", offset, limit)
+        sub_name_txt = ''
+        for i, j in enumerate(sub_name_list):
+            sub_name_txt += f"  {i+1}:{j}\n"
+        return self.tab["description"], sub_name_txt

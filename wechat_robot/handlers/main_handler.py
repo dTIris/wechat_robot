@@ -1,16 +1,18 @@
 """-"""
-from wechat_robot.constants.const import REMIND_TXT, MAIN_TXT, STATE_MAPPING
+from wechat_robot.constants.const import REMIND_TXT, TAB_MENU_TXT, STATE_MAPPING
 from wechat_robot.lib.tools import to_int
+from wechat_robot.model_managers.tab_manager import TabManager
 from .base_handler import BaseHandler
 
 
 class MainHandler(BaseHandler):
-    """-"""
+    """-"""        
     async def execute(self):
         """-"""
         # 从某个地方跳回页面
-        if not self.data:
-            return None, MAIN_TXT
+        if self.data == '':
+            description, sub_name_list = await self.get_tab_txt_and_sub_tab()
+            return None, TAB_MENU_TXT.format(description, sub_name_list)
         
         # 数据预处理，中文转数字(字符型)
         _, data = self.pretreatment()
@@ -20,7 +22,7 @@ class MainHandler(BaseHandler):
             return None, REMIND_TXT
 
         # 字符为数字时，根据数字找出跳转页面
-        if data.isdigit():
+        if isinstance(to_int(data, ''), int):
             tab = await self.get_next_tab(to_int(data))
             # 找不到跳转页面时，返回提醒
             if not tab:

@@ -29,3 +29,8 @@ class BaseManager:
     async def get_values_list_with_params(cls, filter_params, values_list_field=None, flat=True):
         """ .values_list """
         return await cls.model.filter(**filter_params).values_list(values_list_field, flat=flat)
+    
+    @classmethod
+    async def get_by_limit_and_value(cls, value, offset=0, limit=8):
+        """-"""
+        return await cls.model.filter().offset(offset).limit(limit).values_list(value, flat=True)

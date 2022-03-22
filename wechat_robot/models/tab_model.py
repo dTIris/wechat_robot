@@ -15,6 +15,7 @@ class TabModel(Model):
     code = fields.CharField(max_length=16, default='', description="识别码")
     pid = fields.IntField(default=0, description='父级id')
     scene = fields.CharEnumField(enum_type=TabScene, default='', description="场景")
+    alias = fields.CharField(max_length=16, default='', description="别名，中文名")
     
     class Meta:
         """Meta"""
@@ -32,6 +33,7 @@ class TabModel(Model):
             "status": self.status,
             "code": self.code,
             "pid": self.pid,
-            "scene": self.scene
+            "scene": self.scene,
+            "alias": self.alias
         }
     
