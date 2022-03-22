@@ -43,3 +43,12 @@ class TabStatus(StringEnum):
     """-"""
     normal = "normal"  # 正常
     stop = "stop"      # 停用
+
+class TabScene(StringEnum):
+    """-"""
+    menu = "menu"   # 菜单tab
+    
+class StateEnum(StringEnum):
+    """-"""
+    end_state = "end_state"
+    error_state = "error_state"

@@ -11,7 +11,7 @@ DB_CONFIG = {
         "default": {
             "engine": "tortoise.backends.mysql",
             "credentials": {
-                "host": 'localhost',
+                "host": '120.78.89.219',
                 "port": 3306,
                 "user": 'myread',
                 "password": 'Read@123456',
@@ -30,7 +30,7 @@ DB_CONFIG = {
 
 REDIS_SETTINGS = {
     "default": {
-        "host": "localhost",
+        "host": "120.78.89.219",
         "port": 6379,
         "db": 0,
         "password": "my@redis123",
@@ -39,7 +39,7 @@ REDIS_SETTINGS = {
         "timeout": 33
     },
     "other": {
-        "host": "localhost",
+        "host": "120.78.89.219",
         "port": 6379,
         "db": 1,
         "password": "my@redis123",

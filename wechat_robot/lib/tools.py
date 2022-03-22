@@ -19,14 +19,16 @@ class GetSetTer(object):
         del self._x
 
 def to_int(num_str, default_num=0):
+    num = num_str
     try:
-        return int(num_str)
+        return int(num)
     except:
         return default_num
 
 
 def to_float(num_str, default_num=0):
+    num = num_str
     try:
-        return float(num_str)
+        return float(num)
     except:
         return default_num

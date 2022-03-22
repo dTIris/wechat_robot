@@ -2,9 +2,9 @@
 from tortoise import fields
 from tortoise.models import Model
 
-from wechat_robot.constants.enums import TabStatus
+from wechat_robot.constants.enums import TabScene, TabStatus
 
-class TabTable(Model):
+class TabModel(Model):
     """-"""
     id = fields.IntField(pk=True)
     level = fields.IntField(default=0, description='tab所处于层级')
@@ -14,7 +14,7 @@ class TabTable(Model):
     status = fields.CharEnumField(enum_type=TabStatus, default=TabStatus.normal.value, description="状态")
     code = fields.CharField(max_length=16, default='', description="识别码")
     pid = fields.IntField(default=0, description='父级id')
-    scene = fields.CharField(max_length=16, default='', description="场景")
+    scene = fields.CharEnumField(enum_type=TabScene, default='', description="场景")
     
     class Meta:
         """Meta"""

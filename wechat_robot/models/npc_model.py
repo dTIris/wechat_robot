@@ -3,7 +3,7 @@ from tortoise import fields
 from tortoise.models import Model
 
 
-class NpcTable(Model):
+class NpcModel(Model):
     """-"""
     id = fields.IntField(pk=True)
     name = fields.CharField(max_length=16, default='', description="名字")
