@@ -80,3 +80,11 @@ class BaseHandler:
         for i, j in enumerate(sub_name_list):
             sub_name_txt += f"  {i+1}:{j}\n"
         return self.tab["description"], sub_name_txt
+    
+    async def get_data_in_db(self, number, model_manager):
+        """-"""
+        obj = await model_manager.get_by_id(number)
+        if not obj:
+            return False, {}
+        data = obj.to_dict()
+        return True, data["name"]

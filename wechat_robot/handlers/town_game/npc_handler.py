@@ -17,7 +17,8 @@ class NpcHandler(BaseHandler):
         for level, level_id in NPC_GOODS_LEVEL.items():
             if level_id not in data_dict:
                 continue
-            txt += f"{level}的物品是：{data_dict[level_id]}\n"
+            data_txt = ",".join(data_dict[level_id])
+            txt += f"{level}的物品是：{data_txt}\n"
 
         return txt
         
@@ -31,11 +32,13 @@ class NpcHandler(BaseHandler):
         # 数据预处理，中文转数字(字符型)
         _, data = self.pretreatment()
         
-        # 物品页面没有下级页面，不进行处理
+        # 字符为数字时的处理，将数字转化为具体物品名字
         if to_int(data) > 0:
-            return None, REMIND_TXT
+            result, data = await self.get_data_in_db(to_int(data), NpcManager)
+            if not result:
+                return None, REMIND_TXT
         
-        # 字符为数字时的处理，0退出、-1返回
+        # 字符为数字时的处理，页面跳转，0退出、-1返回
         if isinstance(to_int(data, ''), int):
             tab = await self.get_next_tab(to_int(data))
             # 找不到跳转页面时，返回提醒
