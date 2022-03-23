@@ -1,5 +1,5 @@
 """-"""
-from wechat_robot.constants.const import REMIND_TXT, TAB_MENU_TXT, STATE_MAPPING
+from wechat_robot.constants.const import GET_MENU_TXT, REMIND_TXT, TAB_MENU_TXT, STATE_MAPPING
 from wechat_robot.lib.tools import to_int
 from wechat_robot.model_managers.tab_manager import TabManager
 from .base_handler import BaseHandler
@@ -10,7 +10,7 @@ class MainHandler(BaseHandler):
     async def execute(self):
         """-"""
         # 从某个地方跳回页面
-        if self.data == '':
+        if self.data == '' or self.data in GET_MENU_TXT:
             description, sub_name_list = await self.get_tab_txt_and_sub_tab()
             return None, TAB_MENU_TXT.format(description, sub_name_list)
         

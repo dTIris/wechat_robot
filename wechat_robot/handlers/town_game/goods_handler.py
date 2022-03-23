@@ -1,5 +1,5 @@
 from collections import defaultdict
-from wechat_robot.constants.const import DEFAULT_LEVEL, NPC_GOODS_LEVEL, REMIND_TXT, STATE_MAPPING, TAB_MENU_TXT
+from wechat_robot.constants.const import DEFAULT_LEVEL, GET_MENU_TXT, NPC_GOODS_LEVEL, REMIND_TXT, STATE_MAPPING, TAB_MENU_TXT
 from wechat_robot.handlers.base_handler import BaseHandler
 from wechat_robot.lib.tools import to_int
 from wechat_robot.model_managers.goods_manager import GoodsManager
@@ -26,7 +26,7 @@ class GoodsHandler(BaseHandler):
     async def execute(self):
         """-"""
         # 从某个地方跳回页面
-        if self.data == '':
+        if self.data == '' or self.data in GET_MENU_TXT:
             description, sub_name_list = await self.get_tab_txt_and_datas(GoodsManager)
             return None, TAB_MENU_TXT.format(description, sub_name_list)
         
