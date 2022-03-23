@@ -58,7 +58,7 @@ class GoodsHandler(BaseHandler):
         # 找到对应页面则返回新页面并更新用户状态
         if tab:
             await self.cache.set_with_cache_info(self.user_tab_key, tab)
-            return tab, new_data[1:] if result else ''
+            return tab, ','.join(new_data[1:]) if result else ''
 
         # 处理非页面跳转申请
         if result:

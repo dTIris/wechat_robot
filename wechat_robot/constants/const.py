@@ -8,7 +8,8 @@ class ErrorCode:
 SEPARATOR_LIST = ["-", "_", " ", "/", ",", "|", ":", "·", "\\"]
 
 REMIND_TXT = "您好，请输入正确指令"
-TAB_MENU_TXT = "你好，这里是{}: \n{}请输入选项或数字进行选择"
+line = '-'*12
+TAB_MENU_TXT = "你好，这里是{}: \n{}" + line + "\n  0:退出\n  -1:返回\n请输入选项或数字进行选择"
 
 TXTMAPPING = {
     "退出": '0',

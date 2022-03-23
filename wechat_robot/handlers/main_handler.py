@@ -40,6 +40,6 @@ class MainHandler(BaseHandler):
         # 找到对应页面则返回新页面并更新用户状态
         if tab:
             await self.cache.set_with_cache_info(self.user_tab_key, tab)
-            return tab, new_data[1:] if result else ''
+            return tab, ','.join(new_data[1:]) if result else ''
         
         return None, REMIND_TXT
