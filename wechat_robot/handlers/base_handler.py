@@ -1,7 +1,6 @@
 """-"""
 
-from tkinter.messagebox import NO
-from wechat_robot.constants.const import GET_MENU_TXT, REMIND_TXT, SEPARATOR_LIST, STATE_MAPPING, TAB_MENU_TXT
+from wechat_robot.constants.const import GET_MENU_TXT, REMIND_TXT, STATE_MAPPING, TAB_MENU_TXT
 from wechat_robot.constants.redis_keys import RedisKeys
 from wechat_robot.lib.redis_tools import Cache
 from wechat_robot.lib.text_tools import str2list, str2num

@@ -1,5 +1,4 @@
-from collections import defaultdict
-from wechat_robot.constants.const import DEFAULT_LEVEL, GET_MENU_TXT, NPC_GOODS_LEVEL, REMIND_TXT, STATE_MAPPING, TAB_MENU_TXT
+from wechat_robot.constants.const import DEFAULT_LEVEL, GET_MENU_TXT, NPC_GOODS_LEVEL, REMIND_TXT, TAB_MENU_TXT
 from wechat_robot.handlers.base_handler import BaseHandler
 from wechat_robot.lib.text_tools import gen_data_with_infos
 from wechat_robot.lib.tools import to_int

@@ -1,7 +1,5 @@
 """-"""
-from wechat_robot.constants.const import GET_MENU_TXT, REMIND_TXT, TAB_MENU_TXT, STATE_MAPPING
-from wechat_robot.lib.tools import to_int
-from wechat_robot.model_managers.tab_manager import TabManager
+from wechat_robot.constants.const import REMIND_TXT
 from .base_handler import BaseHandler
 
 
