@@ -6,40 +6,13 @@ from .base_handler import BaseHandler
 
 
 class MainHandler(BaseHandler):
-    """-"""        
-    async def execute(self):
-        """-"""
-        # 从某个地方跳回页面
-        if self.data == '' or self.data in GET_MENU_TXT:
-            description, sub_name_list = await self.get_tab_txt_and_sub_tab()
-            return None, TAB_MENU_TXT.format(description, sub_name_list)
-        
-        # 数据预处理，中文转数字(字符型)
-        _, data = self.pretreatment()
+    """-"""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
-        # 主菜单没有上级页面，当用户输入零，退出和返回时不进行处理
-        if data in ['0', '-1']:
-            return None, REMIND_TXT
 
-        # 字符为数字时，根据数字找出跳转页面
-        if isinstance(to_int(data, ''), int):
-            tab = await self.get_next_tab(to_int(data))
-            # 找不到跳转页面时，返回提醒
-            if not tab:
-                return None, REMIND_TXT
-            # 跳转页面，并更改用户状态
-            await self.cache.set_with_cache_info(self.user_tab_key, tab)
-            return tab, ''
-
-        # 解析字符串
-        result, new_data = self.parse_data(data)
-        # 根据字符串找出对应的页面id
-        tab_id = STATE_MAPPING.get(new_data[0], -2) if result else STATE_MAPPING.get(data, -2)
-        # 根据页面id找出页面
-        tab = await self.get_tab_by_id(tab_id)
-        # 找到对应页面则返回新页面并更新用户状态
-        if tab:
-            await self.cache.set_with_cache_info(self.user_tab_key, tab)
-            return tab, ','.join(new_data[1:]) if result else ''
-        
-        return None, REMIND_TXT
+    async def is_unrecognized(self):
+        """主菜单页面,无法识别0, -1"""
+        if self.data in ['0', '-1']:
+            return True, REMIND_TXT
+        return False, self.data

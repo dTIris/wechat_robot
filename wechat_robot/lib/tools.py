@@ -1,3 +1,6 @@
+from wechat_robot.constants.const import SEPARATOR_LIST
+
+
 class GetSetTer(object):
     def __init__(self):
         self._x = None

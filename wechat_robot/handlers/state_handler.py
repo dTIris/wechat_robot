@@ -30,8 +30,8 @@ class StateHandler:
             handler = self.handlers.get(start_state["name"] or "")
             if not handler:
                 return False, ErrorCode.state_error
-            try: 
-                handler_ = handler(start_state, self.user, cargo)
+            try:
+                handler_ = handler(tab=start_state, user=self.user, data=cargo)
                 new_state, cargo = await handler_.execute()
                 if not new_state:
                     return False, cargo
