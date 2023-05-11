@@ -4,6 +4,7 @@ from wechat_robot.constants.const import DEFAULT_LEVEL
 from .base_manager import BaseManager
 from wechat_robot.models import NpcModel
 
+
 class NpcManager(BaseManager):
     """-"""
     model = NpcModel
@@ -27,11 +28,11 @@ class NpcManager(BaseManager):
             t1.NAME = "{npc_name}"
             AND t2.`level` in ({level_str})
         """
-        
+
         conn = Tortoise.get_connection('default')
         _, infos = await conn.execute_query(sql, [])
         return infos
-    
+
     @classmethod
     async def update_or_create(cls, npc):
         """新增或者更新记录"""

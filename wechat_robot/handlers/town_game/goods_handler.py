@@ -4,12 +4,14 @@ from wechat_robot.lib.text_tools import gen_data_with_infos
 from wechat_robot.lib.tools import to_int
 from wechat_robot.model_managers.goods_manager import GoodsManager
 
+
 class GoodsHandler(BaseHandler):
-    """-""" 
+    """-"""
+
     def __init__(self, **kwargs):
         self.model_manager = GoodsManager
         super().__init__(model_manager=self.model_manager, **kwargs)
-    
+
     async def is_show_menu(self):
         """
         是否显示菜单页, 返回

@@ -4,8 +4,10 @@ from wechat_robot.lib.text_tools import gen_data_with_infos
 from wechat_robot.lib.tools import to_int
 from wechat_robot.model_managers.npc_manager import NpcManager
 
+
 class NpcHandler(BaseHandler):
     """-"""
+
     def __init__(self, **kwargs):
         self.model_manager = NpcManager
         super().__init__(model_manager=self.model_manager, **kwargs)
@@ -21,7 +23,7 @@ class NpcHandler(BaseHandler):
             description, sub_name_list = await self.get_name_list()
             return True, TAB_MENU_TXT.format(description, sub_name_list)
         return False, self.data
-    
+
     async def is_unrecognized(self):
         """
             npc没有下级页面, 无法处理数字(>0)跳转页面

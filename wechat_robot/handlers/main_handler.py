@@ -5,9 +5,9 @@ from .base_handler import BaseHandler
 
 class MainHandler(BaseHandler):
     """-"""
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
 
     async def is_unrecognized(self):
         """主菜单页面,无法识别0, -1"""
