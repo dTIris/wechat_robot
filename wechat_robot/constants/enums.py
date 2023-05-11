@@ -52,3 +52,12 @@ class StateEnum(StringEnum):
     """-"""
     end_state = "end_state"
     error_state = "error_state"
+    
+    
+class GoodsType(StringEnum):
+    """-"""
+    animal = "animal"  # 动物
+    mineral = "mineral"  # 矿石
+    food = "food"       # 菜肴
+    default = "default"
+    

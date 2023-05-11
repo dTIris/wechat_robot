@@ -10,6 +10,9 @@ class GoodsManager(BaseManager):
     """-"""
     model = GoodsModel
 
+    def __init__(self):
+        super().__init__(model=self.model)
+        
     @classmethod
     async def get_npc_goods_by_level(cls, goods_name, level_ids=DEFAULT_LEVEL):
         """-"""

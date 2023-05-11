@@ -8,6 +8,9 @@ class NpcManager(BaseManager):
     """-"""
     model = NpcModel
 
+    def __init__(self):
+        super().__init__(model=self.model)
+
     @classmethod
     async def get_npc_goods_by_level(cls, npc_name, level_ids=DEFAULT_LEVEL):
         """-"""
@@ -28,3 +31,19 @@ class NpcManager(BaseManager):
         conn = Tortoise.get_connection('default')
         _, infos = await conn.execute_query(sql, [])
         return infos
+    
+    @classmethod
+    async def update_or_create(cls, npc):
+        """新增或者更新记录"""
+        params = {
+            "name": npc['name']
+        }
+        _npc = await cls.model.filter(**params).first()
+        is_created = 0
+        if _npc:
+            _npc = await _npc.update_from_dict(npc)
+            await _npc.save()
+        else:
+            _npc = await cls.create(npc)
+            is_created = 1
+        return is_created, _npc.to_dict()

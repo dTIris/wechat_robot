@@ -26,6 +26,7 @@ MANIFEST
 
 # Sphinx documentation
 docs/_build/
+wechat_robot/zk_config/
 
 # pyenv
 .python-version

@@ -7,6 +7,7 @@ import wechat_robot.config as CONFIG
 
 r_pool = GetSetTer()
 
+
 async def get_redis_pool(rdb_conf, **kwargs) -> Redis:
     """
     redis连接池
@@ -19,6 +20,7 @@ async def get_redis_pool(rdb_conf, **kwargs) -> Redis:
         password=rdb_conf.password,
         **kwargs
     )
+
 
 async def get_redis_pool_with_kwargs(host, port, db, password, **kwargs) -> Redis:
     """redis连接池【显式传参】"""
@@ -34,6 +36,7 @@ async def get_redis_pool_with_kwargs(host, port, db, password, **kwargs) -> Redi
     )
     return pool
 
+
 async def setup_redis(name, conf):
     """
     初始化redis连接池
@@ -42,7 +45,8 @@ async def setup_redis(name, conf):
     """
     redis_conn = await get_redis_pool_with_kwargs(**conf)
     setattr(r_pool, name, redis_conn)
-    
+
+
 async def get_redis_connection(name=None):
     """获取一个redis连接"""
     name = name or 'default'
@@ -57,8 +61,9 @@ async def get_redis_connection(name=None):
     setattr(r_pool, name, redis_conn)
     return redis_conn
 
+
 class CacheInfo:
-    
+
     def __init__(self, key, timeout=600):
         self.key = key
         self.timeout = timeout
@@ -85,18 +90,18 @@ class Cache:
         return json.loads(value)
 
     async def hgetall(self, key: str):
-        """获取缓存"""
+        """获取所有缓存"""
         value = await self.redis_client.hgetall(key)
         if value is None:
             return None
         return value
 
     async def hincrby(self, key: str, field: str, increment=1):
-        """获取缓存"""
+        """增量缓存"""
         await self.redis_client.hincrby(key, field, increment)
 
     async def hdel(self, key: str, field, *fields):
-        """获取缓存"""
+        """删除缓存"""
         await self.redis_client.hdel(key, field, *fields)
 
     async def delete(self, key: str):

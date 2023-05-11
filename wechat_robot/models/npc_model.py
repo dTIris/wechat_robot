@@ -1,4 +1,5 @@
 """ - """
+from email.policy import default
 from tortoise import fields
 from tortoise.models import Model
 
@@ -6,8 +7,10 @@ from tortoise.models import Model
 class NpcModel(Model):
     """-"""
     id = fields.IntField(pk=True)
-    name = fields.CharField(max_length=16, default='', description="名字")
+    name = fields.CharField(max_length=8, default='', description="名字")
     sex = fields.IntField(default=0, description='性别(0：未知，1男，2女)')
+    birthday = fields.CharField(max_length=8, default='', description="生日")
+    description = fields.CharField(max_length=64, default='', description="描述")
 
     class Meta:
         """Meta"""
@@ -19,5 +22,7 @@ class NpcModel(Model):
         return {
             "id": self.id,
             "name": self.name,
-            "sex": self.sex
+            "sex": self.sex,
+            "birthday": self.birthday,
+            "description": self.description,
         }

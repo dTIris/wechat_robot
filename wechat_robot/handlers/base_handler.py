@@ -143,16 +143,13 @@ class BaseHandler:
     async def execute(self):
         """-"""
         # 解析字符串,是否为字符串
-        print('is_data_list')
         self.is_list, self.new_data = self.is_data_list(self.data)
         
         # 解析字符串,是否为数字
-        print('is_data_num')
         data = self.new_data[0] if self.is_list else self.data
         self.is_num, self.data = self.is_data_num(data)
         
         # 是否显示菜单页
-        print('is_show_menu')
         result, self.data = await self.is_show_menu()
         if result:
             return None, self.data

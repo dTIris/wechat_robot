@@ -1,6 +1,3 @@
-from wechat_robot.constants.const import SEPARATOR_LIST
-
-
 class GetSetTer(object):
     def __init__(self):
         self._x = None
@@ -20,6 +17,7 @@ class GetSetTer(object):
     def x(self):
         print("deleter of x called")
         del self._x
+
 
 def to_int(num_str, default_num=0):
     num = num_str

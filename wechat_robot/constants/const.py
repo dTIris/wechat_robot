@@ -1,14 +1,16 @@
 DEFAULT = "default"
 
+
 class ErrorCode:
     state_error = "用户状态错误"
     type_error = "暂时无法处理该类型的消息"
     tab_error = "用户tab错误"
-    
+
+
 SEPARATOR_LIST = ["-", "_", " ", "/", ",", "|", ":", "·", "\\"]
 
 REMIND_TXT = "您好，请输入正确指令"
-line = '-'*12
+line = '-' * 12
 TAB_MENU_TXT = "你好，这里是{}: \n{}" + line + "\n  0:退出\n  -1:返回\n请输入选项或数字进行选择"
 
 TXTMAPPING = {
@@ -48,4 +50,4 @@ NPC_GOODS_LEVEL = {
     "不喜欢": 0
 }
 
-DEFAULT_LEVEL = [1,2,3]
+DEFAULT_LEVEL = [1, 2, 3]

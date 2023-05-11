@@ -5,6 +5,8 @@ from wechatpy.exceptions import InvalidSignatureException
 import wechat_robot.config as CONFIG
 
 logger = logging.getLogger("WxSignatureHandler")
+
+
 class WxSignatureHandler:
     async def auth_service(self, signature, timestamp, nonce):
         """ 

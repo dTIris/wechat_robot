@@ -13,8 +13,8 @@ DB_CONFIG = {
             "credentials": {
                 "host": '120.78.89.219',
                 "port": 3306,
-                "user": 'myread',
-                "password": 'Read@123456',
+                "user": 'iris',
+                "password": 'Iris@123456',
                 "database": 'wx_public_accounts',
                 "maxsize": 3
             }
